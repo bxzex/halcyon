@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Halcyon</title>
-<meta name="description" content="Halcyon — a coastal retreat on the edge of the dunes. A WebGL brand site with scroll-driven scenes and procedurally drawn imagery." />
+<meta name="description" content="Halcyon, a coastal retreat on the edge of the dunes. A WebGL brand site with scroll-driven scenes and procedurally drawn imagery." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
@@ -134,7 +134,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 <section id="place">
   <div class="wrap two">
     <div>
-      <div class="tag rise">01 — The place</div>
+      <div class="tag rise">01 · The place</div>
       <p class="lede rise">A long low house between the marram grass and the <em>cold bright water</em>.</p>
     </div>
     <div class="body rise">
@@ -147,7 +147,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 
 <section class="rooms" id="rooms">
   <div class="wrap">
-    <div class="tag rise">02 — Rooms</div>
+    <div class="tag rise">02 · Rooms</div>
     <p class="lede rise">Fourteen rooms, four shapes, one view.</p>
     <div class="rail" id="rail"></div>
   </div>
@@ -155,7 +155,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 
 <section>
   <div class="wrap">
-    <div class="tag rise">03 — In numbers</div>
+    <div class="tag rise">03 · In numbers</div>
     <div class="stats">
       <div class="stat rise"><div class="v" data-count="14">0</div><div class="k">Rooms</div></div>
       <div class="stat rise"><div class="v" data-count="9" data-suffix=" mi">0</div><div class="k">Of coast</div></div>
@@ -168,14 +168,14 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 <section class="quote">
   <div class="wrap">
     <blockquote class="split"><span><i>We came for three nights</i></span> <span><i>and rebooked from</i></span> <span><i>the breakfast table.</i></span></blockquote>
-    <cite class="rise">— Guest book, room 9</cite>
+    <cite class="rise">Guest book, room 9</cite>
   </div>
 </section>
 
 <section class="book" id="book">
   <div class="wrap two">
     <div>
-      <div class="tag rise">04 — Reserve</div>
+      <div class="tag rise">04 · Reserve</div>
       <p class="lede rise">Tell us when, and we will write back the same day.</p>
     </div>
     <div class="rise">
@@ -454,7 +454,7 @@ form.addEventListener("submit", e => {
   const d = $("ar").value;
   ok = showErr("ar", !d ? "Pick an arrival date." : (new Date(d) < new Date(new Date().toDateString()) ? "That date has been and gone." : "")) && ok;
   if(!ok){ $("sent").textContent = ""; return; }
-  $("sent").textContent = "Thank you, " + $("nm").value.trim().split(" ")[0] + ". Nothing was actually sent — this is a case study — but the form checked every field before saying so.";
+  $("sent").textContent = "Thank you, " + $("nm").value.trim().split(" ")[0] + ". Nothing was actually sent, since this is a case study, but the form checked every field before saying so.";
   form.reset();
 });
 document.querySelectorAll('nav a[href^="#"]').forEach(a => a.onclick = e => {
