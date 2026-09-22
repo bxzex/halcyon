@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Halcyon</title>
+<meta name="description" content="Halcyon — a coastal retreat on the edge of the dunes. A WebGL brand site with scroll-driven scenes and procedurally drawn imagery." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ivory:#faf6ee; --sand:#ece2cf; --sand2:#ded0b6;
+  --forest:#13312a; --moss:#2f5d4a; --clay:#c2683f;
+  --ink:#16221e; --sub:#5d6b64;
+  --f:"Fraunces",Georgia,serif;
+  --s:"DM Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--s);font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--forest);color:var(--ivory)}
+
+/* scroll is driven by a lerped transform, so the page needs a spacer */
+#scroll{position:fixed;inset:0;will-change:transform}
+#spacer{pointer-events:none}
+.bar{position:fixed;top:0;left:0;height:2px;background:var(--clay);z-index:60;width:0}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:26px;
+  padding:22px 38px;mix-blend-mode:difference;color:#fff}
+nav .mark{font-family:var(--f);font-size:21px;letter-spacing:.02em;font-weight:400}
+nav .links{margin-left:auto;display:flex;gap:26px;font-size:13px;letter-spacing:.06em}
+nav a{color:inherit;text-decoration:none;opacity:.8}
+nav a:hover{opacity:1}
+@media(max-width:760px){nav{padding:16px 18px}nav .links{display:none}}
+
+.hero{position:relative;height:100vh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero .inner{position:relative;z-index:2;padding:0 38px 62px;width:100%;color:var(--ivory)}
+.eyebrow{font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;opacity:.82;margin-bottom:18px}
+h1{font-family:var(--f);font-weight:300;font-size:clamp(52px,10.5vw,160px);line-height:.88;margin:0;letter-spacing:-.025em}
+h1 em{font-style:italic;font-weight:300}
+.hero .meta{display:flex;gap:30px;flex-wrap:wrap;margin-top:26px;font-size:13px;opacity:.85;letter-spacing:.04em}
+.cue{position:absolute;right:38px;bottom:62px;z-index:2;color:var(--ivory);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.75}
+.cue i{display:block;width:1px;height:46px;background:currentColor;margin:12px auto 0;transform-origin:top;animation:drop 2.4s ease-in-out infinite}
+@keyframes drop{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@media(max-width:760px){.hero .inner{padding:0 18px 44px}.cue{display:none}}
+
+section{padding:130px 38px;position:relative}
+@media(max-width:760px){section{padding:78px 18px}}
+.wrap{max-width:1180px;margin:0 auto}
+.lede{font-family:var(--f);font-weight:300;font-size:clamp(26px,3.6vw,48px);line-height:1.22;letter-spacing:-.015em;max-width:20ch}
+.lede em{font-style:italic;color:var(--moss)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
+@media(max-width:860px){.two{grid-template-columns:1fr;gap:34px}}
+.body{color:var(--sub);font-size:16.5px;line-height:1.75;max-width:46ch}
+.body p+p{margin-top:18px}
+.tag{font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--moss);margin-bottom:22px}
+
+.rooms{background:var(--sand);}
+.rail{display:flex;gap:26px;overflow-x:auto;padding:44px 0 10px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.card{flex:none;width:min(420px,78vw);scroll-snap-align:start}
+.card canvas{width:100%;aspect-ratio:4/5;display:block;background:var(--sand2)}
+.card h3{font-family:var(--f);font-weight:400;font-size:25px;margin:20px 0 6px;letter-spacing:-.01em}
+.card p{color:var(--sub);font-size:14.5px;line-height:1.65;margin:0}
+.card .n{font-size:11.5px;letter-spacing:.2em;color:var(--moss)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-top:1px solid var(--sand2);padding-top:44px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat .v{font-family:var(--f);font-weight:300;font-size:clamp(42px,6vw,76px);line-height:1;letter-spacing:-.03em}
+.stat .k{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);margin-top:12px}
+
+.quote{background:var(--forest);color:var(--ivory)}
+.quote blockquote{font-family:var(--f);font-style:italic;font-weight:300;font-size:clamp(26px,4vw,52px);line-height:1.28;margin:0;max-width:22ch;letter-spacing:-.015em}
+.quote cite{display:block;font-style:normal;font-family:var(--s);font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.65;margin-top:34px}
+
+.book{background:var(--sand)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px;max-width:640px}
+@media(max-width:620px){form{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--moss)}
+input,select,textarea{font-family:var(--s);font-size:15px;padding:12px 2px;border:0;border-bottom:1px solid var(--sand2);
+  background:transparent;color:var(--ink);outline:none;border-radius:0}
+input:focus,select:focus,textarea:focus{border-color:var(--forest)}
+input.bad{border-color:var(--clay)}
+.err{font-size:12px;color:var(--clay);min-height:15px}
+.btn{font-family:var(--s);font-size:13.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--forest);color:var(--ivory);
+  border:0;padding:17px 34px;cursor:pointer;justify-self:start;position:relative;overflow:hidden}
+.btn span{position:relative;z-index:2}
+.btn::after{content:"";position:absolute;inset:0;background:var(--clay);transform:translateY(101%);transition:transform .38s cubic-bezier(.2,.8,.2,1)}
+.btn:hover::after{transform:translateY(0)}
+.sent{color:var(--moss);font-size:14px;margin-top:14px}
+
+footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
+.fgrid{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-end}
+.fmark{font-family:var(--f);font-weight:300;font-size:clamp(56px,13vw,180px);line-height:.82;letter-spacing:-.035em;opacity:.95}
+.fmeta{margin-left:auto;font-size:13px;line-height:2;opacity:.72;text-align:right}
+.fbot{margin-top:60px;padding-top:22px;border-top:1px solid rgba(250,246,238,.16);display:flex;gap:18px;flex-wrap:wrap;font-size:12px;opacity:.6}
+.fbot a{color:inherit}
+.fbot span:last-child{margin-left:auto}
+
+/* everything with .rise comes up as it enters the viewport */
+.rise{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.rise.in{opacity:1;transform:none}
+.split span{display:inline-block;overflow:hidden;vertical-align:top}
+.split span i{display:inline-block;font-style:inherit;transform:translateY(105%);transition:transform .95s cubic-bezier(.2,.85,.2,1)}
+.split.in span i{transform:none}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<nav>
+  <span class="mark">Halcyon</span>
+  <span class="links">
+    <a href="#place">The place</a><a href="#rooms">Rooms</a><a href="#book">Reserve</a>
+  </span>
+</nav>
+
+<div id="scroll">
+<div class="hero">
+  <canvas id="gl"></canvas>
+  <div class="inner">
+    <div class="eyebrow rise">North shore · est. 1974</div>
+    <h1 class="split"><span><i>Halcyon</i></span><br><span><i><em>on the dunes</em></i></span></h1>
+    <div class="meta rise">
+      <span>Fourteen rooms</span><span>Nine miles of coast</span><span>No clocks in the lobby</span>
+    </div>
+  </div>
+  <div class="cue">Scroll<i></i></div>
+</div>
+
+<section id="place">
+  <div class="wrap two">
+    <div>
+      <div class="tag rise">01 — The place</div>
+      <p class="lede rise">A long low house between the marram grass and the <em>cold bright water</em>.</p>
+    </div>
+    <div class="body rise">
+      <p>Halcyon was built as a weather station and kept most of its manners. The windows face the wind. The floors are the boards that were already here. Nothing about it apologises for being quiet.</p>
+      <p>Fourteen rooms sit along a single corridor that runs the length of the dune. Each one opens onto the same view and none of them share a wall with the road. Breakfast is at a long table and lasts as long as it lasts.</p>
+      <p>We do not have a spa, a gym or a conference suite. We have a kettle, a fire, and a path down to a beach that is usually empty.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rooms" id="rooms">
+  <div class="wrap">
+    <div class="tag rise">02 — Rooms</div>
+    <p class="lede rise">Fourteen rooms, four shapes, one view.</p>
+    <div class="rail" id="rail"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="tag rise">03 — In numbers</div>
+    <div class="stats">
+      <div class="stat rise"><div class="v" data-count="14">0</div><div class="k">Rooms</div></div>
+      <div class="stat rise"><div class="v" data-count="9" data-suffix=" mi">0</div><div class="k">Of coast</div></div>
+      <div class="stat rise"><div class="v" data-count="1974">0</div><div class="k">Built</div></div>
+      <div class="stat rise"><div class="v" data-count="0" data-zero="None">0</div><div class="k">Televisions</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="quote">
+  <div class="wrap">
+    <blockquote class="split"><span><i>We came for three nights</i></span> <span><i>and rebooked from</i></span> <span><i>the breakfast table.</i></span></blockquote>
+    <cite class="rise">— Guest book, room 9</cite>
+  </div>
+</section>
+
+<section class="book" id="book">
+  <div class="wrap two">
+    <div>
+      <div class="tag rise">04 — Reserve</div>
+      <p class="lede rise">Tell us when, and we will write back the same day.</p>
+    </div>
+    <div class="rise">
+      <form id="form" novalidate>
+        <div class="field"><label for="nm">Name</label><input id="nm" name="name" autocomplete="name"><div class="err" data-for="nm"></div></div>
+        <div class="field"><label for="em">Email</label><input id="em" name="email" autocomplete="email"><div class="err" data-for="em"></div></div>
+        <div class="field"><label for="ar">Arriving</label><input id="ar" type="date"><div class="err" data-for="ar"></div></div>
+        <div class="field"><label for="ni">Nights</label><select id="ni"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>7</option></select><div class="err"></div></div>
+        <div class="field full"><label for="ms">Anything we should know</label><textarea id="ms" rows="2"></textarea><div class="err"></div></div>
+        <button class="btn" type="submit"><span>Request a room</span></button>
+      </form>
+      <div class="sent" id="sent"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fmark">Halcyon</div>
+      <div class="fmeta">
+        Dune Road, North Shore<br>
+        +1 (000) 000 0000<br>
+        stay@halcyon.example
+      </div>
+    </div>
+    <div class="fbot">
+      <span>A fictional brand, built as a case study.</span>
+      <a href="https://github.com/bxzex/halcyon">Source</a>
+      <span>Built by <a href="https://bxzex.com">bxzex</a></span>
+    </div>
+  </div>
+</footer>
+</div>
+<div id="spacer"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* =====================================================================
+   The hero: a fragment shader running domain-warped fractal noise, tinted
+   to the brand palette. The warp is what makes it read as moving water
+   rather than moving noise.
+   ===================================================================== */
+const glc = $("gl");
+const gl = glc.getContext("webgl", { antialias:false, alpha:false });
+const FRAG = `
+precision highp float;
+uniform vec2 uRes;
+uniform float uTime, uScroll;
+uniform vec2 uMouse;
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
+float noise(vec2 p){
+  vec2 i = floor(p), f = fract(p);
+  vec2 u = f*f*(3.0-2.0*f);
+  return mix(mix(hash(i), hash(i+vec2(1,0)), u.x),
+             mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
+}
+float fbm(vec2 p){
+  float v = 0.0, a = 0.5;
+  for(int i=0;i<4;i++){ v += a*noise(p); p *= 2.02; a *= 0.5; }
+  return v;
+}
+void main(){
+  vec2 uv = gl_FragCoord.xy / uRes;
+  vec2 p = uv * vec2(uRes.x/uRes.y, 1.0) * 2.6;
+  float t = uTime*0.055;
+
+  // warp the sample point by another noise field, twice
+  vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(4.7, -t*0.8)));
+  vec2 r = vec2(fbm(p + 3.4*q + vec2(1.7,9.2) + 0.28*t),
+                fbm(p + 3.4*q + vec2(8.3,2.8) - 0.22*t));
+  float f = fbm(p + 3.2*r);
+
+  // banding turns the smooth field into something like caustics
+  float bands = sin((f + r.x*0.6 + uScroll*0.9)*9.0);
+  bands = smoothstep(0.1, 0.92, bands*0.5 + 0.5);
+
+  vec3 deep  = vec3(0.043, 0.157, 0.133);
+  vec3 moss  = vec3(0.145, 0.322, 0.263);
+  vec3 sandC = vec3(0.886, 0.824, 0.698);
+  vec3 foam  = vec3(0.976, 0.961, 0.929);
+
+  vec3 col = mix(deep, moss, smoothstep(0.25, 0.75, f));
+  col = mix(col, sandC, pow(bands, 2.2)*0.55);
+  col = mix(col, foam, pow(max(0.0, r.y - 0.42), 2.0)*1.5);
+
+  // a slow highlight that follows the pointer
+  float m = 1.0 - smoothstep(0.0, 0.62, distance(uv, uMouse) * vec2(uRes.x/uRes.y, 1.0).x * 0.62);
+  col += vec3(0.10,0.09,0.06) * m * 0.55;
+
+  // vignette and a touch of grain, so the gradient never bands on screen
+  col *= 1.0 - 0.55*pow(distance(uv, vec2(0.5)), 2.1);
+  col += (hash(gl_FragCoord.xy + uTime) - 0.5) * 0.028;
+
+  gl_FragColor = vec4(col, 1.0);
+}`;
+const VERT = "attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0); }";
+let prog = null, uni = {}, glOK = false;
+if(gl){
+  const mk = (src, type) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(s)); return null; } return s; };
+  const vs = mk(VERT, gl.VERTEX_SHADER), fs = mk(FRAG, gl.FRAGMENT_SHADER);
+  if(vs && fs){
+    prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if(gl.getProgramParameter(prog, gl.LINK_STATUS)){
+      gl.useProgram(prog);
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, "p");
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      ["uRes","uTime","uScroll","uMouse"].forEach(n => uni[n] = gl.getUniformLocation(prog, n));
+      glOK = true;
+    }
+  }
+}
+if(!glOK){
+  // a still gradient is a perfectly good hero if the GPU will not play
+  glc.style.background = "linear-gradient(160deg,#13312a 0%,#2f5d4a 45%,#ece2cf 100%)";
+}
+let mouse = { x:0.5, y:0.5 }, mouseT = { x:0.5, y:0.5 };
+window.addEventListener("pointermove", e => { mouseT.x = e.clientX/innerWidth; mouseT.y = 1 - e.clientY/innerHeight; });
+
+/* ---------- procedural room imagery, so the site ships with no assets ---------- */
+const ROOMS = [
+  ["01","The Long Room","Twenty feet of window and a bed you have to walk around. Faces due west, so it takes the last of the light.", 0.12],
+  ["02","Dune Cabin","Set apart from the house, up on the ridge. You hear the grass before you hear anything else.", 0.44],
+  ["03","The Keep","The old instrument room. Thick walls, one deep window, warmest room in winter.", 0.71],
+  ["04","North Nine","Two steps down from the corridor and straight out onto the sand.", 0.88],
+];
+function paintRoom(cv, seed){
+  const d = Math.min(2, window.devicePixelRatio||1);
+  const w = cv.clientWidth || 400, h = w*1.25;
+  cv.width = Math.round(w*d); cv.height = Math.round(h*d);
+  const x = cv.getContext("2d");
+  x.scale(d,d);
+  let s = Math.floor(seed*100000) + 7;
+  const rnd = () => { s = (s*1103515245 + 12345) & 0x7fffffff; return s/0x7fffffff; };
+
+  const sky = x.createLinearGradient(0,0,0,h*0.62);
+  sky.addColorStop(0, "#13312a"); sky.addColorStop(0.55, "#2f5d4a"); sky.addColorStop(1, "#8aa08c");
+  x.fillStyle = sky; x.fillRect(0,0,w,h);
+
+  // a low sun, placed by the seed so every card differs
+  const sunX = w*(0.18 + seed*0.64), sunY = h*(0.30 + rnd()*0.12);
+  const glow = x.createRadialGradient(sunX, sunY, 0, sunX, sunY, w*0.5);
+  glow.addColorStop(0, "rgba(236,226,207,.95)"); glow.addColorStop(0.25, "rgba(226,200,150,.45)"); glow.addColorStop(1, "rgba(226,200,150,0)");
+  x.fillStyle = glow; x.fillRect(0,0,w,h*0.72);
+
+  // layered dunes, each a sine ridge with its own noise
+  const bands = 5;
+  for(let b=0; b<bands; b++){
+    const base = h*(0.54 + b*0.095);
+    const amp = 16 + rnd()*26, fr = 0.006 + rnd()*0.01, ph = rnd()*10;
+    x.beginPath(); x.moveTo(0,h);
+    x.lineTo(0, base);
+    for(let px=0; px<=w; px+=3){
+      const y = base + Math.sin(px*fr + ph)*amp + Math.sin(px*fr*2.7 + ph*1.9)*amp*0.35;
+      x.lineTo(px, y);
+    }
+    x.lineTo(w,h); x.closePath();
+    const t = b/(bands-1);
+    const c = x.createLinearGradient(0, base-30, 0, h);
+    c.addColorStop(0, `rgba(${Math.round(60+t*160)},${Math.round(80+t*140)},${Math.round(64+t*110)},1)`);
+    c.addColorStop(1, `rgba(${Math.round(40+t*150)},${Math.round(56+t*128)},${Math.round(44+t*98)},1)`);
+    x.fillStyle = c; x.fill();
+  }
+  // marram grass in the foreground
+  x.strokeStyle = "rgba(24,44,34,.55)"; x.lineWidth = 1;
+  for(let i=0;i<190;i++){
+    const gxp = rnd()*w, gy = h*(0.82 + rnd()*0.2), l = 12 + rnd()*30, lean = (rnd()-0.5)*16;
+    x.beginPath(); x.moveTo(gxp, gy);
+    x.quadraticCurveTo(gxp + lean*0.4, gy - l*0.6, gxp + lean, gy - l);
+    x.stroke();
+  }
+  // film grain, tying the four cards together
+  const img = x.getImageData(0,0,cv.width,cv.height);
+  for(let i=0;i<img.data.length;i+=4){
+    const n = (Math.random()-0.5)*15;
+    img.data[i] += n; img.data[i+1] += n; img.data[i+2] += n;
+  }
+  x.putImageData(img,0,0);
+}
+const rail = $("rail");
+ROOMS.forEach(([n,title,copy,seed]) => {
+  const d = document.createElement("div");
+  d.className = "card rise";
+  d.innerHTML = '<canvas></canvas><div class="n" style="margin-top:18px">'+n+'</div><h3>'+title+'</h3><p>'+copy+'</p>';
+  rail.appendChild(d);
+  requestAnimationFrame(() => paintRoom(d.querySelector("canvas"), seed));
+});
+
+/* ---------- lerped scroll, reveals and counters ---------- */
+const scroller = $("scroll"), spacer = $("spacer");
+let target = 0, current = 0;
+function measure(){
+  spacer.style.height = scroller.scrollHeight + "px";
+  const dpr = Math.min(1.35, devicePixelRatio||1);
+  const cap = Math.min(1, 1500/(innerWidth*dpr));      // never rasterise wider than ~1500px
+  glc.width = Math.round(innerWidth * dpr * cap);
+  glc.height = Math.round(innerHeight * dpr * cap);
+  if(glOK) gl.viewport(0,0,glc.width,glc.height);
+  [...rail.querySelectorAll("canvas")].forEach((c,i) => paintRoom(c, ROOMS[i][3]));
+}
+window.addEventListener("resize", measure);
+window.addEventListener("scroll", () => { target = window.scrollY; });
+
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+}, { threshold:0.18, rootMargin:"0px 0px -8% 0px" });
+document.querySelectorAll(".rise, .split").forEach(el => io.observe(el));
+
+// counters run once, when their tile arrives
+const counters = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if(!e.isIntersecting) return;
+    counters.unobserve(e.target);
+    const el = e.target.querySelector("[data-count]");
+    if(!el) return;
+    const to = +el.dataset.count, suffix = el.dataset.suffix || "";
+    if(to === 0){ el.textContent = el.dataset.zero || "0"; return; }
+    const t0 = performance.now(), dur = 1300;
+    const run = now => {
+      const k = Math.min(1, (now-t0)/dur), e2 = 1 - Math.pow(1-k, 3);
+      el.textContent = Math.round(to*e2) + suffix;
+      if(k < 1) requestAnimationFrame(run);
+    };
+    requestAnimationFrame(run);
+  });
+}, { threshold:0.4 });
+document.querySelectorAll(".stat").forEach(el => counters.observe(el));
+
+let t0 = performance.now(), prevT = performance.now();
+function frame(now){
+  requestAnimationFrame(frame);
+  // frame rate independent smoothing: a slow device still converges in the same
+  // wall clock time instead of lagging further behind the further it falls
+  const dt = Math.min(64, now - prevT); prevT = now;
+  const k = 1 - Math.pow(1 - 0.09, dt/16.667);
+  current += (target - current) * k;
+  if(Math.abs(target-current) < 0.06) current = target;
+  scroller.style.transform = "translate3d(0,"+(-current)+"px,0)";
+
+  const max = Math.max(1, scroller.scrollHeight - innerHeight);
+  $("bar").style.width = Math.min(100, current/max*100) + "%";
+
+  mouse.x += (mouseT.x - mouse.x)*0.05;
+  mouse.y += (mouseT.y - mouse.y)*0.05;
+
+  if(glOK){
+    gl.uniform2f(uni.uRes, glc.width, glc.height);
+    gl.uniform1f(uni.uTime, (now - t0)/1000);
+    gl.uniform1f(uni.uScroll, current/max);
+    gl.uniform2f(uni.uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+}
+
+/* ---------- the reservation form actually validates ---------- */
+const form = $("form");
+const showErr = (id, msg) => {
+  const f = document.querySelector('.err[data-for="'+id+'"]');
+  if(f) f.textContent = msg;
+  $(id).classList.toggle("bad", !!msg);
+  return !msg;
+};
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  let ok = true;
+  ok = showErr("nm", $("nm").value.trim().length < 2 ? "We need a name to put on the door." : "") && ok;
+  ok = showErr("em", /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test($("em").value.trim()) ? "" : "That address does not look right.") && ok;
+  const d = $("ar").value;
+  ok = showErr("ar", !d ? "Pick an arrival date." : (new Date(d) < new Date(new Date().toDateString()) ? "That date has been and gone." : "")) && ok;
+  if(!ok){ $("sent").textContent = ""; return; }
+  $("sent").textContent = "Thank you, " + $("nm").value.trim().split(" ")[0] + ". Nothing was actually sent — this is a case study — but the form checked every field before saying so.";
+  form.reset();
+});
+document.querySelectorAll('nav a[href^="#"]').forEach(a => a.onclick = e => {
+  e.preventDefault();
+  const el = document.querySelector(a.getAttribute("href"));
+  if(el) window.scrollTo({ top: el.offsetTop, behavior:"smooth" });
+});
+
+measure();
+setTimeout(measure, 400);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
