@@ -7,14 +7,14 @@
 <meta name="description" content="Halcyon, a coastal retreat on the edge of the dunes. A WebGL brand site with scroll-driven scenes and procedurally drawn imagery." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 :root{
   --ivory:#faf6ee; --sand:#ece2cf; --sand2:#ded0b6;
   --forest:#13312a; --moss:#2f5d4a; --clay:#c2683f;
   --ink:#16221e; --sub:#5d6b64;
-  --f:"Fraunces",Georgia,serif;
-  --s:"DM Sans",system-ui,sans-serif;
+  --f:"Newsreader",Georgia,serif;
+  --s:"Instrument Sans",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:auto}
@@ -37,11 +37,11 @@ nav a:hover{opacity:1}
 .hero{position:relative;height:100vh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero .inner{position:relative;z-index:2;padding:0 38px 62px;width:100%;color:var(--ivory)}
-.eyebrow{font-size:11.5px;letter-spacing:.32em;text-transform:uppercase;opacity:.82;margin-bottom:18px}
+.eyebrow{font-size:14px;letter-spacing:.02em;opacity:.9;margin-bottom:18px}
 h1{font-family:var(--f);font-weight:300;font-size:clamp(52px,10.5vw,160px);line-height:.88;margin:0;letter-spacing:-.025em}
-h1 em{font-style:italic;font-weight:300}
+h1 em{font-style:normal;font-weight:300}
 .hero .meta{display:flex;gap:30px;flex-wrap:wrap;margin-top:26px;font-size:13px;opacity:.85;letter-spacing:.04em}
-.cue{position:absolute;right:38px;bottom:62px;z-index:2;color:var(--ivory);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.75}
+.cue{position:absolute;right:38px;bottom:62px;z-index:2;color:var(--ivory);font-size:13px;opacity:.8}
 .cue i{display:block;width:1px;height:46px;background:currentColor;margin:12px auto 0;transform-origin:top;animation:drop 2.4s ease-in-out infinite}
 @keyframes drop{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
 @media(max-width:760px){.hero .inner{padding:0 18px 44px}.cue{display:none}}
@@ -50,12 +50,12 @@ section{padding:130px 38px;position:relative}
 @media(max-width:760px){section{padding:78px 18px}}
 .wrap{max-width:1180px;margin:0 auto}
 .lede{font-family:var(--f);font-weight:300;font-size:clamp(26px,3.6vw,48px);line-height:1.22;letter-spacing:-.015em;max-width:20ch}
-.lede em{font-style:italic;color:var(--moss)}
+.lede em{font-style:normal}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
 @media(max-width:860px){.two{grid-template-columns:1fr;gap:34px}}
 .body{color:var(--sub);font-size:16.5px;line-height:1.75;max-width:46ch}
 .body p+p{margin-top:18px}
-.tag{font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--moss);margin-bottom:22px}
+.tag{font-size:14px;color:var(--moss);margin-bottom:22px}
 
 .rooms{background:var(--sand);}
 .rail{display:flex;gap:26px;overflow-x:auto;padding:44px 0 10px;scroll-snap-type:x mandatory;scrollbar-width:none}
@@ -64,29 +64,29 @@ section{padding:130px 38px;position:relative}
 .card canvas{width:100%;aspect-ratio:4/5;display:block;background:var(--sand2)}
 .card h3{font-family:var(--f);font-weight:400;font-size:25px;margin:20px 0 6px;letter-spacing:-.01em}
 .card p{color:var(--sub);font-size:14.5px;line-height:1.65;margin:0}
-.card .n{font-size:11.5px;letter-spacing:.2em;color:var(--moss)}
+.card .n{font-size:13px;color:var(--moss)}
 
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-top:1px solid var(--sand2);padding-top:44px}
 @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
 .stat .v{font-family:var(--f);font-weight:300;font-size:clamp(42px,6vw,76px);line-height:1;letter-spacing:-.03em}
-.stat .k{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);margin-top:12px}
+.stat .k{font-size:14px;color:var(--sub);margin-top:12px}
 
 .quote{background:var(--forest);color:var(--ivory)}
 .quote blockquote{font-family:var(--f);font-style:italic;font-weight:300;font-size:clamp(26px,4vw,52px);line-height:1.28;margin:0;max-width:22ch;letter-spacing:-.015em}
-.quote cite{display:block;font-style:normal;font-family:var(--s);font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.65;margin-top:34px}
+.quote cite{display:block;font-style:normal;font-family:var(--s);font-size:14px;opacity:.7;margin-top:34px}
 
 .book{background:var(--sand)}
 form{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px;max-width:640px}
 @media(max-width:620px){form{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;gap:7px}
 .field.full{grid-column:1/-1}
-label{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--moss)}
+label{font-size:13.5px;color:var(--moss)}
 input,select,textarea{font-family:var(--s);font-size:15px;padding:12px 2px;border:0;border-bottom:1px solid var(--sand2);
   background:transparent;color:var(--ink);outline:none;border-radius:0}
 input:focus,select:focus,textarea:focus{border-color:var(--forest)}
 input.bad{border-color:var(--clay)}
 .err{font-size:12px;color:var(--clay);min-height:15px}
-.btn{font-family:var(--s);font-size:13.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--forest);color:var(--ivory);
+.btn{font-family:var(--s);font-size:15px;font-weight:500;background:var(--forest);color:var(--ivory);
   border:0;padding:17px 34px;cursor:pointer;justify-self:start;position:relative;overflow:hidden}
 .btn span{position:relative;z-index:2}
 .btn::after{content:"";position:absolute;inset:0;background:var(--clay);transform:translateY(101%);transition:transform .38s cubic-bezier(.2,.8,.2,1)}
@@ -99,11 +99,10 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 .fmeta{margin-left:auto;font-size:13px;line-height:2;opacity:.72;text-align:right}
 .fbot{margin-top:60px;padding-top:22px;border-top:1px solid rgba(250,246,238,.16);display:flex;gap:18px;flex-wrap:wrap;font-size:12px;opacity:.6}
 .fbot a{color:inherit}
-.fbot span:last-child{margin-left:auto}
+.fbot a:last-child{margin-left:auto}
 
-/* everything with .rise comes up as it enters the viewport */
-.rise{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
-.rise.in{opacity:1;transform:none}
+/* only the two big headlines animate in */
+.rise{opacity:1}
 .split span{display:inline-block;overflow:hidden;vertical-align:top}
 .split span i{display:inline-block;font-style:inherit;transform:translateY(105%);transition:transform .95s cubic-bezier(.2,.85,.2,1)}
 .split.in span i{transform:none}
@@ -134,7 +133,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 <section id="place">
   <div class="wrap two">
     <div>
-      <div class="tag rise">01 · The place</div>
+      <div class="tag rise">The place</div>
       <p class="lede rise">A long low house between the marram grass and the <em>cold bright water</em>.</p>
     </div>
     <div class="body rise">
@@ -147,7 +146,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 
 <section class="rooms" id="rooms">
   <div class="wrap">
-    <div class="tag rise">02 · Rooms</div>
+    <div class="tag rise">Rooms</div>
     <p class="lede rise">Fourteen rooms, four shapes, one view.</p>
     <div class="rail" id="rail"></div>
   </div>
@@ -155,7 +154,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 
 <section>
   <div class="wrap">
-    <div class="tag rise">03 · In numbers</div>
+    <div class="tag rise">In numbers</div>
     <div class="stats">
       <div class="stat rise"><div class="v" data-count="14">0</div><div class="k">Rooms</div></div>
       <div class="stat rise"><div class="v" data-count="9" data-suffix=" mi">0</div><div class="k">Of coast</div></div>
@@ -175,7 +174,7 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
 <section class="book" id="book">
   <div class="wrap two">
     <div>
-      <div class="tag rise">04 · Reserve</div>
+      <div class="tag rise">Reserve</div>
       <p class="lede rise">Tell us when, and we will write back the same day.</p>
     </div>
     <div class="rise">
@@ -197,15 +196,14 @@ footer{background:var(--forest);color:var(--ivory);padding:80px 38px 40px}
     <div class="fgrid">
       <div class="fmark">Halcyon</div>
       <div class="fmeta">
-        Dune Road, North Shore<br>
-        +1 (000) 000 0000<br>
+        14 Dune Road, Plum Island, MA<br>
+        +1 (978) 555 0142<br>
         stay@halcyon.example
       </div>
     </div>
     <div class="fbot">
-      <span>A fictional brand, built as a case study.</span>
+      <span>© 2026 <a href="https://bxzex.com">bxzex</a> · Concept site for a fictional hotel</span>
       <a href="https://github.com/bxzex/halcyon">Source</a>
-      <span>Built by <a href="https://bxzex.com">bxzex</a></span>
     </div>
   </div>
 </footer>
@@ -454,7 +452,7 @@ form.addEventListener("submit", e => {
   const d = $("ar").value;
   ok = showErr("ar", !d ? "Pick an arrival date." : (new Date(d) < new Date(new Date().toDateString()) ? "That date has been and gone." : "")) && ok;
   if(!ok){ $("sent").textContent = ""; return; }
-  $("sent").textContent = "Thank you, " + $("nm").value.trim().split(" ")[0] + ". Nothing was actually sent, since this is a case study, but the form checked every field before saying so.";
+  $("sent").textContent = "Thank you, " + $("nm").value.trim().split(" ")[0] + ". Halcyon is a concept site, so no request was sent.";
   form.reset();
 });
 document.querySelectorAll('nav a[href^="#"]').forEach(a => a.onclick = e => {
